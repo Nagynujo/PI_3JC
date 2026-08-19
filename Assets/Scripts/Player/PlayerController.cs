@@ -9,10 +9,10 @@ public class PlayerController : MonoBehaviour
     public float rotationSpeed = 10f;
 
     [Header("Mão (equivalente ao HeldItemMesh)")]
-    [Tooltip("Um GameObject filho vazio, posicionado tipo 'na mão', com MeshFilter + MeshRenderer")]
     public Transform handSlot;
 
     public IngredientBase HeldIngredient { get; private set; }
+    public bool IsInteractKeyHeld => interactAction.IsPressed();
 
     private CharacterController controller;
     private MeshFilter handMeshFilter;
@@ -28,7 +28,6 @@ public class PlayerController : MonoBehaviour
         handMeshFilter = handSlot.GetComponent<MeshFilter>();
         handRenderer = handSlot.GetComponent<MeshRenderer>();
 
-        
         moveAction = new InputAction("Move", InputActionType.Value, expectedControlType: "Vector2");
         moveAction.AddCompositeBinding("2DVector")
             .With("Up", "<Keyboard>/w")
@@ -37,7 +36,6 @@ public class PlayerController : MonoBehaviour
             .With("Right", "<Keyboard>/d");
         moveAction.AddBinding("<Gamepad>/leftStick");
 
-        
         interactAction = new InputAction("Interact", InputActionType.Button, binding: "<Keyboard>/e");
         interactAction.AddBinding("<Gamepad>/buttonSouth");
     }
@@ -58,10 +56,8 @@ public class PlayerController : MonoBehaviour
     {
         HandleMovement();
 
-        
         if (interactAction.WasPressedThisFrame() && currentInteractable != null)
         {
-            Debug.Log("Apertei E. Interactable atual: " + currentInteractable);
             currentInteractable.Interact(this);
         }
     }
@@ -74,24 +70,29 @@ public class PlayerController : MonoBehaviour
         if (move.sqrMagnitude > 0.01f)
         {
             controller.SimpleMove(move.normalized * speed);
-
-            
             Quaternion targetRot = Quaternion.LookRotation(move);
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, rotationSpeed * Time.deltaTime);
         }
     }
 
-  
     public void PickUpIngredient(IngredientBase ingredient)
     {
         HeldIngredient = ingredient;
         handMeshFilter.mesh = ingredient.GetIngredientMesh();
         handRenderer.material = ingredient.GetIngredientMaterial();
-
-        
         ingredient.gameObject.SetActive(false);
     }
 
+    
+    public IngredientBase ReleaseHand()
+    {
+        IngredientBase released = HeldIngredient;
+        HeldIngredient = null;
+        handMeshFilter.mesh = null;
+        return released;
+    }
+
+   
     public void ClearHand()
     {
         if (HeldIngredient != null)
@@ -104,7 +105,6 @@ public class PlayerController : MonoBehaviour
 
     void OnTriggerStay(Collider other)
     {
-        Debug.Log("Trigger com: " + other.gameObject.name);
         IInteractable interactable = other.GetComponent<IInteractable>();
         if (interactable != null) currentInteractable = interactable;
     }

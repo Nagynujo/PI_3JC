@@ -125,4 +125,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3784d592588844498e51d18200bdd65, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::IngredientBase
+  kind: 2
   tipoDeProcesso: 1
+  meshProcessado: {fileID: 0}
+  materialProcessado: {fileID: 0}
+  potionType: 0
+  estaEngarrafada: 0

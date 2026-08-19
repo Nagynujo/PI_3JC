@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &8508682084278303592
+--- !u!1 &5003913342187337783
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,48 +8,48 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 2266838405661848835}
-  - component: {fileID: 6746518724596448238}
-  - component: {fileID: 2754766375540886341}
-  - component: {fileID: 803895688748269726}
-  - component: {fileID: -2425672476472775804}
+  - component: {fileID: 5182899675987283780}
+  - component: {fileID: 4886179397814932040}
+  - component: {fileID: 2200400884555777992}
+  - component: {fileID: 360392838469142682}
+  - component: {fileID: -5501757813366379173}
   m_Layer: 0
-  m_Name: MilhoDePipoca
+  m_Name: Fire
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &2266838405661848835
+--- !u!4 &5182899675987283780
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8508682084278303592}
+  m_GameObject: {fileID: 5003913342187337783}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.23957, y: 2.11, z: 3.752}
-  m_LocalScale: {x: 0.48735, y: 0.48735, z: 0.48735}
+  m_LocalPosition: {x: 0.21959, y: 0.8677, z: 3.2091}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &6746518724596448238
+--- !u!33 &4886179397814932040
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8508682084278303592}
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!23 &2754766375540886341
+  m_GameObject: {fileID: 5003913342187337783}
+  m_Mesh: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!23 &2200400884555777992
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8508682084278303592}
+  m_GameObject: {fileID: 5003913342187337783}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -68,7 +68,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 876d80e3f4610f84ba7353be04b30190, type: 2}
+  - {fileID: 2100000, guid: 38b5ea9bc73baf445a1fbff31b09bc94, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -92,13 +92,13 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &803895688748269726
-BoxCollider:
+--- !u!136 &360392838469142682
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8508682084278303592}
+  m_GameObject: {fileID: 5003913342187337783}
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -110,24 +110,26 @@ BoxCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
+  serializedVersion: 2
+  m_Radius: 0.5
+  m_Height: 2
+  m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &-2425672476472775804
+--- !u!114 &-5501757813366379173
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8508682084278303592}
+  m_GameObject: {fileID: 5003913342187337783}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b3784d592588844498e51d18200bdd65, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::IngredientBase
-  kind: 1
+  kind: 0
   tipoDeProcesso: 0
   meshProcessado: {fileID: 0}
   materialProcessado: {fileID: 0}
-  potionType: 0
+  potionType: 1
   estaEngarrafada: 0
