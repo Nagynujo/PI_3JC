@@ -83,6 +83,13 @@ public class PlayerController : MonoBehaviour
         ingredient.gameObject.SetActive(false);
     }
 
+    public void RefreshHeldVisual()
+    {
+        if (HeldIngredient == null) return;
+        handMeshFilter.mesh = HeldIngredient.GetIngredientMesh();
+        handRenderer.material = HeldIngredient.GetIngredientMaterial();
+    }
+
     
     public IngredientBase ReleaseHand()
     {

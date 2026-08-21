@@ -1,13 +1,9 @@
 using UnityEngine;
 
-
 public class DeliveryStation : MonoBehaviour, IInteractable
 {
     [Tooltip("Tempo em segundos que o player precisa segurar E pra entregar")]
     public float tempoDeEntrega = 1f;
-
-   
-
     public bool RequiresHold => true;
     public float HoldDuration => tempoDeEntrega;
 
@@ -18,7 +14,8 @@ public class DeliveryStation : MonoBehaviour, IInteractable
 
     public bool CanStartHold(PlayerController player)
     {
-        return player.HeldIngredient != null;
+        IngredientBase held = player.HeldIngredient;
+        return held != null && held.estaEngarrafada && held.potionType != PotionType.None;
     }
 
     public void OnHoldStart(PlayerController player)
@@ -33,8 +30,20 @@ public class DeliveryStation : MonoBehaviour, IInteractable
 
     public void OnHoldComplete(PlayerController player)
     {
-        Debug.Log($"Entrega concluída: {player.HeldIngredient.name}");
-        player.ClearHand(); 
+        IngredientBase held = player.HeldIngredient;
+        if (held == null) return;
+
+        bool entregue = OrderManager.Instance != null && OrderManager.Instance.TentarEntregar(held.potionType);
+
+        if (entregue)
+        {
+            Debug.Log($"Entrega concluída: {held.potionType}");
+            player.ClearHand();
+        }
+        else
+        {
+            Debug.Log($"Nenhum pedido pede {held.potionType} agora - guarda a poção");
+        }
     }
 
     public void OnHoldCancelled(PlayerController player)

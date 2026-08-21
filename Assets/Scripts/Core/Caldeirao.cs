@@ -7,12 +7,13 @@ public class Caldeirao : MonoBehaviour, IInteractable
     public class PotionPrefabEntry
     {
         public PotionType tipo;
+        [Tooltip("Prefab usado só como referência de mesh/material (nunca é instanciado)")]
         public GameObject prefab;
     }
 
     [Header("Configuração")]
     public float tempoDeFervura = 5f;
-    [Tooltip("Um prefab de poção pra cada PotionType (Fire, Acid, Poison, Invisibility, Cure, Fast)")]
+    [Tooltip("Um prefab de poção pra cada PotionType (Fire, Acid, Poison, Invisibility, Cure, Fast) — usado só pra pegar mesh/material na hora de engarrafar")]
     public List<PotionPrefabEntry> potionPrefabs;
 
     [Header("Estado (só leitura, pra debug)")]
@@ -22,20 +23,13 @@ public class Caldeirao : MonoBehaviour, IInteractable
     [Range(0f, 1f)] public float progresso;
 
     private float tempoDecorrido;
-    private IngredientBase potionAtual;
+    private PotionType potionProntaTipo = PotionType.None;
 
     public void Interact(PlayerController player)
     {
-        
         if (potionPronta)
         {
-            if (player.HeldIngredient == null)
-            {
-                player.PickUpIngredient(potionAtual);
-                potionPronta = false;
-                potionAtual = null;
-                Debug.Log("Poção retirada do caldeirão");
-            }
+            TentarEngarrafar(player);
             return;
         }
 
@@ -43,9 +37,14 @@ public class Caldeirao : MonoBehaviour, IInteractable
 
         IngredientBase held = player.HeldIngredient;
 
-        
         if (held != null)
         {
+            if (held.ehGarrafaVazia)
+            {
+                Debug.Log("Isso é uma garrafa vazia, não é ingrediente");
+                return;
+            }
+
             if (held.potionType != PotionType.None)
             {
                 Debug.Log("Isso já é uma poção, não dá pra colocar de volta no caldeirão");
@@ -71,7 +70,6 @@ public class Caldeirao : MonoBehaviour, IInteractable
             return;
         }
 
-        
         if (ingredientesDentro.Count == 2)
         {
             estaFervendo = true;
@@ -83,6 +81,42 @@ public class Caldeirao : MonoBehaviour, IInteractable
         {
             Debug.Log($"Precisa de 2 ingredientes (tem {ingredientesDentro.Count})");
         }
+    }
+
+    private void TentarEngarrafar(PlayerController player)
+    {
+        IngredientBase held = player.HeldIngredient;
+
+        if (held == null)
+        {
+            Debug.Log("Pega uma garrafa vazia pra encher a poção");
+            return;
+        }
+
+        if (!held.ehGarrafaVazia || held.estaEngarrafada)
+        {
+            Debug.Log("Precisa estar segurando uma garrafa vazia pra encher");
+            return;
+        }
+
+        GameObject prefab = GetPrefabFor(potionProntaTipo);
+        if (prefab == null)
+        {
+            Debug.LogWarning($"Nenhum prefab configurado pra poção {potionProntaTipo}");
+            return;
+        }
+
+        MeshFilter prefabMeshFilter = prefab.GetComponent<MeshFilter>();
+        MeshRenderer prefabRenderer = prefab.GetComponent<MeshRenderer>();
+        Mesh mesh = prefabMeshFilter != null ? prefabMeshFilter.sharedMesh : null;
+        Material mat = prefabRenderer != null ? prefabRenderer.sharedMaterial : null;
+
+        held.PreencherComoPotion(potionProntaTipo, mesh, mat);
+        player.RefreshHeldVisual();
+
+        potionPronta = false;
+        potionProntaTipo = PotionType.None;
+        Debug.Log("Garrafa engarrafada com a poção!");
     }
 
     void Update()
@@ -117,19 +151,10 @@ public class Caldeirao : MonoBehaviour, IInteractable
             return;
         }
 
-        GameObject prefab = GetPrefabFor(resultado);
-        if (prefab == null)
-        {
-            Debug.LogWarning($"Nenhum prefab configurado pra poção {resultado}");
-            return;
-        }
-
-        GameObject spawned = Instantiate(prefab, transform.position, Quaternion.identity);
-        potionAtual = spawned.GetComponent<IngredientBase>();
-        potionAtual.gameObject.SetActive(false);
+        potionProntaTipo = resultado;
         potionPronta = true;
 
-        Debug.Log($"Poção pronta: {resultado}! Aperta E pra pegar");
+        Debug.Log($"Poção pronta: {resultado}! Segura uma garrafa vazia e aperta E pra encher");
     }
 
     private PotionType DeterminePotion()

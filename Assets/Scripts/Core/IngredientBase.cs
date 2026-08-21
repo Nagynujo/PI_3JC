@@ -12,7 +12,10 @@ public class IngredientBase : MonoBehaviour
     public Mesh meshProcessado;
     public Material materialProcessado;
 
-    [Header("Se for uma poção (preencher isso, ignorar o resto)")]
+    [Header("Se for uma garrafa vazia (preencher isso, ignorar o resto)")]
+    public bool ehGarrafaVazia;
+
+    [Header("Poção (preenchido automaticamente ao engarrafar no Caldeirão)")]
     public PotionType potionType = PotionType.None;
     public bool estaEngarrafada;
 
@@ -39,11 +42,15 @@ public class IngredientBase : MonoBehaviour
             GetComponent<MeshRenderer>().sharedMaterial = materialProcessado;
     }
 
-    public void MarcarComoEngarrafada()
+    public void PreencherComoPotion(PotionType tipo, Mesh mesh, Material material)
     {
+        potionType = tipo;
         estaEngarrafada = true;
-        // se quiser trocar o visual pra "com rolha", dá pra usar os mesmos
-        // campos meshProcessado/materialProcessado, ou adicionar novos campos
-        // específicos depois.
+
+        if (mesh != null)
+            GetComponent<MeshFilter>().sharedMesh = mesh;
+
+        if (material != null)
+            GetComponent<MeshRenderer>().sharedMaterial = material;
     }
 }

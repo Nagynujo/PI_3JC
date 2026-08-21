@@ -53,6 +53,12 @@ public class StationBase : MonoBehaviour, IInteractable
     {
         IngredientBase held = player.HeldIngredient;
 
+        if (held.ehGarrafaVazia)
+        {
+            Debug.Log("Não dá pra processar uma garrafa vazia");
+            return;
+        }
+
         
         if (held.potionType != PotionType.None)
         {
