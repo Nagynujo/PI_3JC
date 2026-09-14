@@ -127,7 +127,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::IngredientBase
   kind: 2
   tipoDeProcesso: 1
-  meshProcessado: {fileID: 0}
-  materialProcessado: {fileID: 0}
+  meshProcessado: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+  materialProcessado: {fileID: 2100000, guid: 6abcfba332359a14c9e2c143fa952cc2, type: 2}
+  ehGarrafaVazia: 0
   potionType: 0
   estaEngarrafada: 0

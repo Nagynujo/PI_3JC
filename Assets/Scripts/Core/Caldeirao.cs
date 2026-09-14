@@ -16,6 +16,9 @@ public class Caldeirao : MonoBehaviour, IInteractable, IProgressAction
     [Tooltip("Um prefab de poção pra cada PotionType (Fire, Acid, Poison, Invisibility, Cure, Fast) — usado só pra pegar mesh/material na hora de engarrafar")]
     public List<PotionPrefabEntry> potionPrefabs;
 
+    [Tooltip("Pontos (objetos vazios filhos do Caldeirão) onde os 2 ingredientes ficam sentados visualmente. Se deixar vazio, usa deslocamentos padrão.")]
+    public List<Transform> pontosDosIngredientes;
+
     [Header("Efeitos")]
     [Tooltip("Partícula tocada enquanto o caldeirão está fervendo (bolhas/vapor)")]
     public ParticleSystem particulaFervura;
@@ -72,6 +75,7 @@ public class Caldeirao : MonoBehaviour, IInteractable, IProgressAction
 
             IngredientBase item = player.ReleaseHand();
             item.transform.SetParent(transform);
+            PosicionarIngredienteNoCaldeirao(item, ingredientesDentro.Count);
             ingredientesDentro.Add(item);
             Debug.Log($"Caldeirão: {ingredientesDentro.Count}/2 ingredientes");
             return;
@@ -190,6 +194,28 @@ public class Caldeirao : MonoBehaviour, IInteractable, IProgressAction
         if (Combo(a, b, IngredientKind.MilhoDePipoca, IngredientKind.OlhoDeSalamandra)) return PotionType.Fast;
 
         return PotionType.None;
+    }
+
+    /// <summary>
+    /// Coloca o ingrediente visualmente sentado num dos pontos do caldeirão, em vez de
+    /// deixar ele onde a mão do player estava (o que fazia ele "reaparecer" na estação
+    /// anterior). 'indice' é a posição na lista (0 = primeiro ingrediente, 1 = segundo).
+    /// </summary>
+    private void PosicionarIngredienteNoCaldeirao(IngredientBase item, int indice)
+    {
+        if (pontosDosIngredientes != null && indice < pontosDosIngredientes.Count && pontosDosIngredientes[indice] != null)
+        {
+            item.transform.position = pontosDosIngredientes[indice].position;
+            item.transform.rotation = pontosDosIngredientes[indice].rotation;
+        }
+        else
+        {
+            // Fallback: um deslocamento pequeno pra cada ingrediente não ficar
+            // exatamente sobreposto ao outro.
+            float deslocamentoX = indice == 0 ? -0.2f : 0.2f;
+            item.transform.localPosition = new Vector3(deslocamentoX, 0.5f, 0f);
+            item.transform.localRotation = Quaternion.identity;
+        }
     }
 
     private bool Combo(IngredientKind a, IngredientKind b, IngredientKind x, IngredientKind y)

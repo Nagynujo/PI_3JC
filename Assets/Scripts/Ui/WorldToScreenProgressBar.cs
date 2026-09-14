@@ -46,6 +46,13 @@ public class WorldToScreenProgressBar : MonoBehaviour
         progresso = fonteDeProgresso as IProgressAction;
         cameraPrincipal = cameraManual != null ? cameraManual : Camera.main;
 
+        if (raiz == gameObject)
+        {
+            Debug.LogError($"{gameObject.name}: o campo 'Raiz' não pode ser o mesmo objeto que tem esse script! " +
+                "Se Raiz for desativado, esse script (que fica no mesmo objeto) para de rodar e nunca mais se reativa. " +
+                "Crie um objeto pai separado só pra guardar o script, e deixe 'Raiz' apontar pro objeto filho com o visual.");
+        }
+
         if (raiz != null) raiz.SetActive(false);
     }
 

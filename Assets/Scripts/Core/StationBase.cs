@@ -10,6 +10,9 @@ public class StationBase : MonoBehaviour, IInteractable, IProgressAction
     [Tooltip("Quanto tempo (segundos) precisa segurar E pra terminar de processar")]
     public float tempoDeProcesso = 2f;
 
+    [Tooltip("Ponto (objeto vazio filho da estação) onde o ingrediente fica sentado visualmente em cima dela. Se deixar vazio, usa um deslocamento padrão pra cima.")]
+    public Transform pontoDoItem;
+
     [Header("Estado (só leitura, pra debug)")]
     public IngredientBase itemAtual;
     public bool estaOcupada;
@@ -73,12 +76,31 @@ public class StationBase : MonoBehaviour, IInteractable, IProgressAction
         {
             itemAtual = player.ReleaseHand();
             itemAtual.transform.SetParent(transform);
+            PosicionarItemNaBancada(itemAtual);
             estaOcupada = true;
             Debug.Log($"{gameObject.name} recebeu {itemAtual.name}");
         }
         else
         {
             Debug.Log("Ingrediente errado pra essa estação");
+        }
+    }
+
+    /// <summary>
+    /// Coloca o item visualmente sentado em cima da bancada, em vez de deixar
+    /// ele onde a mão do player estava. Usa 'pontoDoItem' se estiver configurado.
+    /// </summary>
+    private void PosicionarItemNaBancada(IngredientBase item)
+    {
+        if (pontoDoItem != null)
+        {
+            item.transform.position = pontoDoItem.position;
+            item.transform.rotation = pontoDoItem.rotation;
+        }
+        else
+        {
+            item.transform.localPosition = new Vector3(0f, 0.5f, 0f);
+            item.transform.localRotation = Quaternion.identity;
         }
     }
 
@@ -115,6 +137,7 @@ public class StationBase : MonoBehaviour, IInteractable, IProgressAction
         tempoSegurando = 0f;
 
         itemAtual.MarcarComoProcessado();
+        PosicionarItemNaBancada(itemAtual);
         Debug.Log($"{gameObject.name}: {itemAtual.name} processado!");
     }
 }
