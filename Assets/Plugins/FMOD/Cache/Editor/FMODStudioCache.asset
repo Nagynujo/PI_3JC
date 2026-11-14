@@ -123,10 +123,10 @@ MonoBehaviour:
   Path: ../../../Desktop/fmodBrunasBrew/Build/Desktop/SFX.bank
   Name: SFX
   StudioPath: bank:/SFX
-  lastModified: 639302320143236903
+  lastModified: 639302428602285820
   FileSizes:
   - Name: Desktop
-    Value: 414144
+    Value: 414368
   Exists: 1
 --- !u!114 &-2461718047451175445
 MonoBehaviour:
@@ -178,7 +178,7 @@ MonoBehaviour:
   StringsBanks:
   - {fileID: 4752333527373829179}
   cacheVersion: 131861
-  cacheTime: 639302320143236903
+  cacheTime: 639302428602285820
   SerializableEventsDict:
   - key: event:/borbulho
     index: 0
