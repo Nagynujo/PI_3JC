@@ -1,0 +1,98 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &2723534720555437389
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: f4867df3fa746d149a8bd28d3d473f60, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1.601
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: f4867df3fa746d149a8bd28d3d473f60, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1.601
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: f4867df3fa746d149a8bd28d3d473f60, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1.601
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: f4867df3fa746d149a8bd28d3d473f60, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 3.646
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: f4867df3fa746d149a8bd28d3d473f60, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.264
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: f4867df3fa746d149a8bd28d3d473f60, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.6661626
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: f4867df3fa746d149a8bd28d3d473f60, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: f4867df3fa746d149a8bd28d3d473f60, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: f4867df3fa746d149a8bd28d3d473f60, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: f4867df3fa746d149a8bd28d3d473f60, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: f4867df3fa746d149a8bd28d3d473f60, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: f4867df3fa746d149a8bd28d3d473f60, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: f4867df3fa746d149a8bd28d3d473f60, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: f4867df3fa746d149a8bd28d3d473f60, type: 3}
+      propertyPath: m_Name
+      value: escama
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: f4867df3fa746d149a8bd28d3d473f60, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2662705104937308332}
+  m_SourcePrefab: {fileID: 100100000, guid: f4867df3fa746d149a8bd28d3d473f60, type: 3}
+--- !u!1 &2957345120408268828 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: f4867df3fa746d149a8bd28d3d473f60, type: 3}
+  m_PrefabInstance: {fileID: 2723534720555437389}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2662705104937308332
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2957345120408268828}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b3784d592588844498e51d18200bdd65, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::IngredientBase
+  kind: 0
+  tipoDeProcesso: 0
+  meshProcessado: {fileID: 0}
+  materialProcessado: {fileID: 0}
+  ehGarrafaVazia: 0
+  potionType: 0
+  estaEngarrafada: 0
