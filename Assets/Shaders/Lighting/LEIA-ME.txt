@@ -1,0 +1,76 @@
+BRUNA'S BREW - ILUMINACAO (VERSAO CORRIGIDA)
+
+ATENCAO: O ERRO CS0111 PODE ACONTECER SE HOUVER DUAS COPIAS DOS SCRIPTS.
+Antes de importar, remova apenas as copias antigas deste pacote:
+  Assets/BrunasBrew_Iluminacao_Assets/
+  Assets/BrunasBrew/Lighting/
+Depois importe SOMENTE UM dos arquivos (unitypackage OU ZIP).
+
+Se usar ZIP, copie a pasta BrunasBrew contida nele diretamente para Assets/.
+A estrutura correta e Assets/BrunasBrew/Lighting/
+Nao extraia o ZIP com uma pasta 'Assets' adicional dentro de Assets.
+
+Apos importar, aguarde a compilacao da Unity e use:
+Brunas Brew > Iluminacao > Configurar iluminacao
+
+Esta versao remove o construtor explicito de OriginalLight, preserva os
+metadados GUID do pacote original e inicializa os dados por propriedades.
+
+BRUNA'S BREW - ILUMINACAO ESTILIZADA | UNITY 6000.3.17f1
+=========================================================
+
+INSTALAR
+1) Importe o .unitypackage pelo menu Assets > Import Package > Custom Package.
+   Alternativamente, copie a pasta Assets/BrunasBrew do ZIP para Assets do projeto.
+2) Aguarde a Unity compilar.
+3) Abra a cena da loja (nao precisa entrar no Play Mode).
+4) No menu superior clique em:
+      Brunas Brew > Iluminacao > Configurar iluminacao
+5) Selecione o estilo Aconchegante, Magico ou Equilibrado.
+6) Arraste cada caldeirao da Hierarchy para os campos "Caldeirao 1" e "Caldeirao 2".
+   Se ambos tiverem "caldeir" ou "cauldron" no nome, a deteccao automatica pode funcionar.
+   O sistema cria uma luz para cada caldeirao, sem sombras e com alcance reduzido.
+   Se nao souber qual e o centro da loja, use o botao "Criar / selecionar marcador".
+   Ele cria um GameObject vazio. Ajuste sua posicao no meio do piso da loja.
+7) Clique em "APLICAR NA CENA ABERTA" e salve a cena com Ctrl+S.
+
+RESULTADO
+A Hierarchy tera a pasta BRUNAS_BREW_LIGHTING com:
+ - 01 - Principal quente : sombra suave opcional
+ - 02 - Preenchimento azul : sem sombras
+ - 03 - Recorte lilas : sem sombras
+ - 04 - Magia do caldeirao : caldeirao 1, sem sombras
+ - 05 - Magia do caldeirao 2 : caldeirao 2, sem sombras
+   Luzes sem caldeirao atribuido ficam desativadas.
+Tambem configura a luz ambiente em 3 cores (Trilight).
+Nao cria materiais, shaders, texturas, particulas ou scripts por frame.
+
+RECOMENDACOES
+- Se a luz estiver forte, diminua "Brilho das luzes" e clique Aplicar de novo.
+- Se o programa posicionar alguma luz fora do lugar, mova os objetos na Hierarchy.
+- Se a loja tiver varios ambientes, aplique uma vez e depois ajuste as luzes manualmente.
+- Por padrao, a opcao "Desativar luzes antigas" desliga luzes anteriores,
+  mas o estado de cada luz e guardado para ser restaurado.
+- Para desfazer: abra a ferramenta e clique em "Restaurar iluminacao anterior".
+- Antes de instalar, SALVE UMA COPIA da cena; o backup da ferramenta so cobre
+  ambiente, reflexos e estado 'enabled' das luzes originais.
+- Pode funcionar em Built-in e URP. Em URP, verifique se Additional Lights
+  esta configurado para Per Pixel no URP Asset. Nao ativa isso automaticamente.
+- Sombras extras consomem desempenho; o preset usa no maximo uma luz com sombra.
+- Se existir iluminacao previamente BAKED, pode ser necessario regenerar/limpar
+  o lightmap, pois desativar uma luz nao apaga lightmaps antigos.
+- Materiais UNLIT nao recebem luz real: use materiais Lit/URP Lit para o efeito.
+
+IMPORTANTE
+Este pacote e uma base visual ajustavel; nenhuma captura de um jogo fornece
+coordenadas e escala precisas. Se necessario, reposicione os spots manualmente.
+Os scripts nao foram compilados dentro do Editor Unity neste ambiente.
+
+ATUALIZACAO - SUPORTE PARA DOIS CALDEIROES
+- Substitui o configurador anterior mantendo os mesmos .meta (GUIDs).
+- Se voce ja aplicou um rig, basta abrir o menu e clicar APLICAR novamente.
+- O objeto "04 - Magia do caldeirao" e reutilizado; o 05 sera criado.
+- As luzes seguem posicoes fixas a partir dos transforms no momento da aplicacao.
+  Caso mova os caldeiroes na cena, clique APLICAR novamente ou mova as luzes.
+- Ajuste "Brilho dos caldeiroes" para evitar brilho excessivo.
+- Nao adicione uma segunda copia dos scripts em outra pasta.
