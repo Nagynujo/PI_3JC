@@ -25701,6 +25701,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1856226704}
   - component: {fileID: 1856226705}
+  - component: {fileID: 1856226706}
   m_Layer: 0
   m_Name: Olhao
   m_TagString: Untagged
@@ -25769,6 +25770,53 @@ MonoBehaviour:
   potionTarget: {fileID: 5171322774820505381, guid: f5aa6a7869de87741b172e4afaaa047f, type: 3}
   appearDuration: 0.8
   autoEndAfter: 20
+--- !u!114 &1856226706
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1856226703}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df080eb962ced7a469358700da2885c8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::OlhaoAudio
+  somAparecer:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  loopScanner:
+    Guid:
+      Data1: -1711647454
+      Data2: 1210504101
+      Data3: 1298410410
+      Data4: -988067261
+    Path: event:/olhao
+  somDetectar:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  somLiberar:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  somSumir:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
 --- !u!1001 &1857351899
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -25951,7 +25999,7 @@ MonoBehaviour:
   events:
   - {fileID: 2071776815}
   minInterval: 25
-  maxInterval: 35
+  maxInterval: 45
   autoStart: 1
 --- !u!4 &1871772214
 Transform:
@@ -28901,6 +28949,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2071776816}
   - component: {fileID: 2071776815}
+  - component: {fileID: 2071776817}
   m_Layer: 0
   m_Name: Iced
   m_TagString: Untagged
@@ -28956,6 +29005,40 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1871772214}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2071776817
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2071776814}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 84f30eca48a735e46a36b1b8e0607096, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::IcedAudio
+  somCongelar:
+    Guid:
+      Data1: 698264493
+      Data2: 1122658833
+      Data3: 1389876664
+      Data4: -1431346986
+    Path: event:/gelo
+  loopFrio:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  somDerreter:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  parametroGelo: Gelo
 --- !u!1 &2075755638
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,6 +1,30 @@
 using System.Collections;
 using UnityEngine;
 
+// =====================================================================================
+// [LUCCA - SOM] RESUMO DAS ALTERAÇÕES NESTE ARQUIVO (procure por "[LUCCA - SOM]")
+//   1. Novo campo privado 'icedAudio' (referência ao componente IcedAudio, ARQUIVO NOVO).
+//   2. Awake(): pega o IcedAudio que está no MESMO objeto deste IcedEvent.
+//   3. OnActivated(): toca IcedAudio.Congelar() quando o evento começa (som de congelar +
+//      liga o loop frio).
+//   4. Apply(): manda a intensidade do gelo ('t', de 0 a 1) pro FMOD via IcedAudio.SetGelo().
+//      É opcional: só faz efeito se o evento do loop tiver o parâmetro "Gelo".
+//   5. OnResolving(): toca IcedAudio.Derreter() quando a poção de Fogo é aplicada e, DEPOIS
+//      que o gelo termina de derreter, chama IcedAudio.Parar() (desliga o loop frio).
+//   6. OnForceEnded(): chama IcedAudio.Parar() (desliga o loop, sem tocar som).
+//
+// COMO FUNCIONA:
+//   O IcedAudio fica no MESMO objeto do IcedEvent. Ele lê daqui o 'fireTarget' pra saber
+//   onde tocar o som de derreter. Se não houver IcedAudio no objeto, o evento funciona
+//   normalmente, só sem som (nenhum erro).
+//
+// ONDE CONFIGURAR:
+//   No objeto do IcedEvent: Add Component > IcedAudio e escolher os eventos do FMOD
+//   no Inspector. Nada mais precisa mudar.
+//
+// Todo o resto do arquivo está igual à versão anterior.
+// =====================================================================================
+
 /// <summary>
 /// Evento Iced. Lentidão via EventModifiers (sem Time.timeScale). Resolvido apenas com Fire.
 /// Os valores originais de movimento/ações nunca são sobrescritos: removemos só o NOSSO multiplicador.
@@ -46,6 +70,9 @@ public class IcedEvent : GameEventBase
     private float t; // 0 = normal, 1 = congelado
     private Coroutine transition;
 
+    // [LUCCA - SOM] NOVO: sons do Iced (FMOD). Opcional: fica null se não houver IcedAudio no objeto.
+    private IcedAudio icedAudio;
+
     protected override void OnActivated()
     {
         origAmbient = RenderSettings.ambientLight;
@@ -58,6 +85,10 @@ public class IcedEvent : GameEventBase
         SetVisuals(true);
         if (tintFog) { RenderSettings.fog = true; RenderSettings.fogMode = FogMode.ExponentialSquared; }
         transition = StartCoroutine(Transition(1f));
+
+        // [LUCCA - SOM] NOVO: som de congelar + liga o loop frio. Fica junto do início da
+        // transição (acima), pra o som acompanhar o gelo aparecendo aos poucos.
+        if (icedAudio != null) icedAudio.Congelar();
     }
 
     protected override IEnumerator OnResolving()
@@ -65,17 +96,30 @@ public class IcedEvent : GameEventBase
         if (fireTarget != null) fireTarget.SetActive(false);
         // Velocidade e duração voltam IMEDIATAMENTE ao aplicar Fire; o visual derrete suavemente.
         EventModifiers.RemoveAll(this);
+
+        // [LUCCA - SOM] NOVO: som de derreter, no mesmo instante em que a lentidão some.
+        // O loop frio continua durante o derretimento e é desligado mais abaixo.
+        if (icedAudio != null) icedAudio.Derreter();
+
         if (transition != null) StopCoroutine(transition);
         yield return StartCoroutine(Transition(0f));
+
+        // [LUCCA - SOM] NOVO: o gelo terminou de derreter, então desliga o loop frio.
+        if (icedAudio != null) icedAudio.Parar();
+
         RestoreEnvironment();
         SetVisuals(false);
     }
 
+    // [LUCCA - SOM] ALTERADO: ganhou uma linha no final pra desligar o loop frio, sem tocar
+    // nenhum som (fim forçado/reinício).
     protected override void OnForceEnded()
     {
         EventModifiers.RemoveAll(this);
         RestoreEnvironment();
         SetVisuals(false);
+
+        if (icedAudio != null) icedAudio.Parar();
     }
 
     private IEnumerator Transition(float to)
@@ -91,7 +135,14 @@ public class IcedEvent : GameEventBase
         t = to; Apply();
     }
 
-    private void Awake() { if (fireTarget != null) fireTarget.SetActive(false); }
+    // [LUCCA - SOM] ALTERADO: antes era uma linha só ({ if (fireTarget != null) fireTarget.SetActive(false); }).
+    // Agora também pega o IcedAudio do mesmo objeto (pode não existir).
+    private void Awake()
+    {
+        if (fireTarget != null) fireTarget.SetActive(false);
+
+        icedAudio = GetComponent<IcedAudio>();
+    }
 
     private void Apply()
     {
@@ -107,6 +158,11 @@ public class IcedEvent : GameEventBase
             coldOverlay.alpha = overlayMaxAlpha * k;
             coldOverlay.transform.localScale = Vector3.one * Mathf.Lerp(overlayStartScale, 1f, k);
         }
+
+        // [LUCCA - SOM] NOVO: manda a intensidade do gelo (0 a 1) pro parâmetro do FMOD, pra o
+        // loop frio crescer junto com o gelo e diminuir junto com o derretimento.
+        // Sem o parâmetro no evento (ou com o campo vazio no IcedAudio), não faz nada.
+        if (icedAudio != null) icedAudio.SetGelo(t);
     }
 
     private void RestoreEnvironment()

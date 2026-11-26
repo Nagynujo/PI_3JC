@@ -2,6 +2,29 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
+// =====================================================================================
+// [LUCCA - SOM] RESUMO DAS ALTERAÇÕES NESTE ARQUIVO (procure por "[LUCCA - SOM]")
+//   1. Novo campo privado 'ratAudio' (referência ao componente RatAudio, ARQUIVO NOVO).
+//   2. Init(): pega o RatAudio do próprio rato e toca RatAudio.Surgir() quando o rato
+//      entra em jogo (é aqui que o RatsEvent "libera" cada rato depois do Instantiate).
+//   3. Disperse(): toca RatAudio.Sumir() quando o rato começa a ser removido. Só toca se o
+//      rato ainda estava ativo, pra não repetir o som se Disperse for chamado duas vezes.
+//
+// COMO FUNCIONA:
+//   O RatAudio fica no MESMO objeto (prefab) do RatAgent. Ele espalha os sons de "surgir"
+//   entre os 4 ratos (atraso aleatório + intervalo mínimo) e usa o evento de multi
+//   instrument do FMOD. Se o prefab NÃO tiver RatAudio, o rato funciona normalmente, só
+//   sem som (nenhum erro).
+//
+// ONDE CONFIGURAR:
+//   No prefab do rato: Add Component > RatAudio e escolher os eventos no Inspector
+//   (somSurgir e, opcionalmente, somSumir). Nada mais precisa mudar (RatsEvent continua igual).
+//
+// NÃO chamar RatAudio.Surgir() também em outro lugar (ex.: no RatsEvent), senão o som toca duas vezes.
+//
+// Todo o resto do arquivo está igual à versão anterior.
+// =====================================================================================
+
 /// <summary>
 /// Um rato: perseguir -> avisar (windup) -> investir -> empurrar -> correr pela sala -> perseguir...
 /// Usa NavMeshAgent (respeita obstáculos). Parâmetros vêm do RatsEvent.
@@ -22,14 +45,24 @@ public class RatAgent : MonoBehaviour
     private float stateTimer, repathTimer, wanderTimer, stuckTimer;
     private bool active;
 
+    // [LUCCA - SOM] NOVO: sons do rato (FMOD). Opcional: fica null se o prefab não tiver RatAudio.
+    private RatAudio ratAudio;
+
     public void Init(RatsEvent ownerEvent, Transform player, PlayerPushReceiver pushReceiver)
     {
         agent = GetComponent<NavMeshAgent>();
+
+        // [LUCCA - SOM] NOVO: procura o RatAudio no mesmo objeto (pode não existir).
+        ratAudio = GetComponent<RatAudio>();
+
         owner = ownerEvent; target = player; receiver = pushReceiver;
         agent.stoppingDistance = 0.4f;
         if (warningIndicator != null) warningIndicator.SetActive(false);
         active = true;
         EnterChase();
+
+        // [LUCCA - SOM] NOVO: som de o rato surgir. O RatAudio espalha o som entre os 4 ratos.
+        if (ratAudio != null) ratAudio.Surgir();
     }
 
     private static Vector3 Flat(Vector3 v) { v.y = 0f; return v; }
@@ -151,10 +184,18 @@ public class RatAgent : MonoBehaviour
     /// <summary>Para o comportamento e encolhe o rato antes de removê-lo.</summary>
     public void Disperse(float duration, GameObject vfxPrefab)
     {
+        // [LUCCA - SOM] NOVO: guarda se o rato ainda estava ativo, pra tocar o som de sumir
+        // UMA vez só (Disperse chamado de novo não repete o som).
+        bool estavaAtivo = active;
+
         active = false;
         if (warningIndicator != null) warningIndicator.SetActive(false);
         if (agent != null && agent.isOnNavMesh) agent.isStopped = true;
         if (vfxPrefab != null) Destroy(Instantiate(vfxPrefab, transform.position, Quaternion.identity), 3f);
+
+        // [LUCCA - SOM] NOVO: som de o rato sumir (opcional, só toca se houver evento no RatAudio).
+        if (estavaAtivo && ratAudio != null) ratAudio.Sumir();
+
         StartCoroutine(Shrink(duration));
     }
 

@@ -75,6 +75,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 12f769f9677a12844a46aeedc9647aca, type: 3}
       insertIndex: -1
       addedObject: {fileID: 6950696467658195127}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 12f769f9677a12844a46aeedc9647aca, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -5293277880498364634}
   m_SourcePrefab: {fileID: 100100000, guid: 12f769f9677a12844a46aeedc9647aca, type: 3}
 --- !u!1 &3977698931597140706 stripped
 GameObject:
@@ -116,3 +119,31 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RatAgent
   warningIndicator: {fileID: 0}
+--- !u!114 &-5293277880498364634
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3977698931597140706}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 952e1ec5882205644ad5ed06752839ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RatAudio
+  somSurgir:
+    Guid:
+      Data1: -1029385271
+      Data2: 1314570483
+      Data3: 740177046
+      Data4: 123584600
+    Path: event:/ratos
+  somSumir:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  atrasoMaximo: 0.35
+  intervaloMinimo: 0.12

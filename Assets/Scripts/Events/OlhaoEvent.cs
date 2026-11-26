@@ -1,6 +1,30 @@
 using System.Collections;
 using UnityEngine;
 
+// =====================================================================================
+// [LUCCA - SOM] RESUMO DAS ALTERAÇÕES NESTE ARQUIVO (procure por "[LUCCA - SOM]")
+//   1. Novo campo privado 'olhaoAudio' (referência ao componente OlhaoAudio, ARQUIVO NOVO).
+//   2. Awake(): pega o OlhaoAudio que está no MESMO objeto deste OlhaoEvent.
+//   3. Run(): toca OlhaoAudio.Aparecer() quando o olho aparece (som + liga o loop do scanner).
+//   4. OnScanned(): toca OlhaoAudio.Detectar() quando a Bruna é pega pelo cone e paralisada.
+//   5. ParalyzePlayer(): toca OlhaoAudio.Liberar() quando a paralisia ACABA SOZINHA
+//      (se o evento for resolvido no meio da paralisia, esse som não toca).
+//   6. OnResolving(): toca OlhaoAudio.Sumir() quando o evento é resolvido com a poção
+//      (desliga o loop e toca o som de sumir, junto com o olho encolhendo).
+//   7. OnForceEnded(): chama OlhaoAudio.Parar() (desliga o loop, sem tocar som).
+//
+// COMO FUNCIONA:
+//   O OlhaoAudio fica no MESMO objeto do OlhaoEvent. Ele lê daqui o 'eye' e o 'player'
+//   pra saber onde tocar cada som. Se não houver OlhaoAudio no objeto, o evento funciona
+//   normalmente, só sem som (nenhum erro).
+//
+// ONDE CONFIGURAR:
+//   No objeto do OlhaoEvent: Add Component > OlhaoAudio e escolher os eventos do FMOD
+//   no Inspector. Nada mais precisa mudar (ScannerDetector e ScannerConeVisual continuam iguais).
+//
+// Todo o resto do arquivo está igual à versão anterior.
+// =====================================================================================
+
 /// <summary>
 /// Evento Olhão: olho na área de entrega que varre a sala por partes com um cone de luz visível.
 /// Quem o cone pega (a Bruna) fica paralisada por 2 a 3 segundos. Detecção em ScannerDetector,
@@ -64,8 +88,14 @@ public class OlhaoEvent : GameEventBase
     private Coroutine main, scan, paralysis;
     private float nextParalysisAllowed;
 
+    // [LUCCA - SOM] NOVO: sons do Olhão (FMOD). Opcional: fica null se não houver OlhaoAudio no objeto.
+    private OlhaoAudio olhaoAudio;
+
     private void Awake()
     {
+        // [LUCCA - SOM] NOVO: procura o OlhaoAudio no mesmo objeto (pode não existir).
+        olhaoAudio = GetComponent<OlhaoAudio>();
+
         if (paralysisIndicator != null) paralysisIndicator.SetActive(false);
         if (potionTarget != null) potionTarget.SetActive(false);
         if (player == null)
@@ -118,6 +148,10 @@ public class OlhaoEvent : GameEventBase
         eye.localScale = Vector3.zero;
         eye.gameObject.SetActive(true);
         if (appearVfx != null) Destroy(Instantiate(appearVfx, eye.position, Quaternion.identity), 3f);
+
+        // [LUCCA - SOM] NOVO: som de o olho aparecer + liga o loop do scanner.
+        // Fica DEPOIS de posicionar o olho (acima), pra o som sair no lugar certo.
+        if (olhaoAudio != null) olhaoAudio.Aparecer();
 
         if (scannerLight != null)
         {
@@ -206,6 +240,12 @@ public class OlhaoEvent : GameEventBase
         if (other.GetComponentInParent<PlayerController>() == null) return;
         if (paralysis != null) return;
         if (debugLog) Debug.Log("[Olhão] Bruna no cone: paralisada!");
+
+        // [LUCCA - SOM] NOVO: som de a Bruna ser pega pelo cone. Fica DEPOIS de todas as
+        // checagens acima, então só toca quando a paralisia realmente vai começar
+        // (o cooldown de paralisia também evita o som se repetir em sequência).
+        if (olhaoAudio != null) olhaoAudio.Detectar();
+
         paralysis = StartCoroutine(ParalyzePlayer());
     }
 
@@ -214,6 +254,12 @@ public class OlhaoEvent : GameEventBase
         EventModifiers.SetParalyzed(this, true);
         if (paralysisIndicator != null) paralysisIndicator.SetActive(true);
         yield return new WaitForSeconds(Random.Range(paralysisDurationMin, Mathf.Max(paralysisDurationMin, paralysisDurationMax)));
+
+        // [LUCCA - SOM] NOVO: som de a paralisia acabar. Só chega aqui quando a paralisia termina
+        // sozinha: se o evento for resolvido/encerrado antes, ReleasePlayer() para esta
+        // coroutine e esta linha não roda.
+        if (olhaoAudio != null) olhaoAudio.Liberar();
+
         ReleasePlayer();
     }
 
@@ -229,6 +275,11 @@ public class OlhaoEvent : GameEventBase
     protected override IEnumerator OnResolving()
     {
         ReleasePlayer(); // nenhum efeito persiste após o evento
+
+        // [LUCCA - SOM] NOVO: desliga o loop do scanner e toca o som de sumir, junto com o
+        // olho começando a encolher (animação logo abaixo).
+        if (olhaoAudio != null) olhaoAudio.Sumir();
+
         if (potionTarget != null) potionTarget.SetActive(false);
         StopRoutines();
         if (detector != null) detector.detectionEnabled = false;
@@ -246,7 +297,15 @@ public class OlhaoEvent : GameEventBase
         Hide();
     }
 
-    protected override void OnForceEnded() { ReleasePlayer(); StopRoutines(); Hide(); }
+    // [LUCCA - SOM] ALTERADO: antes era uma linha só ({ ReleasePlayer(); StopRoutines(); Hide(); }).
+    // Agora desliga também o loop do scanner, sem tocar nenhum som (fim forçado/reinício).
+    protected override void OnForceEnded()
+    {
+        ReleasePlayer();
+        StopRoutines();
+        Hide();
+        if (olhaoAudio != null) olhaoAudio.Parar();
+    }
 
     private void StopRoutines()
     {
